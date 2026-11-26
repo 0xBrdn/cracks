@@ -7,13 +7,12 @@
  */
 class Auth {
     use tSingleton;
-    const COOKIENAME = 'authbypass';
     
     protected function __construct(){
-        session_start();
-        if(isset($_COOKIE[self::COOKIENAME])) {
-            $this->log($_COOKIE[self::COOKIENAME]);
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
         }
+        // Suppression du cookie non sécurisé authbypass
     }
     
     public function subscribe($login, $pwd) {

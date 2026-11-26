@@ -1,13 +1,26 @@
 <?php
-    if(!empty($_REQUEST['val'])) {
-        $q = 'insert into cracks (content, owner, datesend) '
-                . ' values("'.nl2br($_REQUEST['content']).'", "'.$_REQUEST['owner'].'", '.time().')';
-        $db->query($q);
-        // rediriger vers le nouveau crack
-        header('Location:index.php?inc=search&cid='.$db->lastInsertId());
+    // On s'assure que la session est active et que l'utilisateur est connecté
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    if (!empty($_POST['val']) && !empty($_SESSION['userid'])) {
+        // On prépare la requête pour éviter l'injection SQL
+        $stmt = $db->prepare('INSERT INTO cracks (content, owner, datesend) VALUES (?, ?, ?)');
+        
+        // On exécute en passant les données séparément
+        $stmt->execute([
+            nl2br($_POST['content']), 
+            $_SESSION['userid'], // On sécurise la récupération côté serveur, impossible à modifier par l'utilisateur
+            time()
+        ]);
+        
+        // On redirige vers le nouveau crack
+        header('Location: index.php?inc=search&cid=' . $db->lastInsertId());
         exit;
     }
-?><form method="post">
+?>
+<form method="post">
     <div>
         <h2>Ajouter un crack</h2>
         <p>

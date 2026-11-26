@@ -47,7 +47,7 @@
         <main>
             <?php
                 $pages_autorisees = ['login', 'sub', 'logoff', 'add', 'search'];
-    
+
                 if(!empty($_REQUEST['inc']) && in_array($_REQUEST['inc'], $pages_autorisees)) {
                 include './inc/'.$_REQUEST['inc'].'.php';
                 } else {

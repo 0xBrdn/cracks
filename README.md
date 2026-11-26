@@ -54,5 +54,3 @@ L'usage de frameworks et librairies externes est interdit.
 
 Echangez avec les autres équipes pour tester leurs corrections,
 et vice-versa.
-
-
