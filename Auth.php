@@ -14,6 +14,16 @@ class Auth {
         }
         // Suppression du cookie non sécurisé authbypass
     }
+
+    public function csrfToken(): string {
+        return $_SESSION['csrf_token'] ??= bin2hex(random_bytes(32));
+    }
+
+    public function validCsrf($token): bool {
+        return is_string($token)
+            && isset($_SESSION['csrf_token'])
+            && hash_equals($_SESSION['csrf_token'], $token);
+    }
     
     public function subscribe($login, $pwd) {
         global $db;
@@ -48,11 +58,13 @@ class Auth {
     
     public function log($id) {
         session_regenerate_id(true);
+        unset($_SESSION['csrf_token']);
         $_SESSION['userid'] = $id;
     }
 
     public function logoff() {
         $_SESSION['userid'] = null;
+        unset($_SESSION['csrf_token']);
         session_regenerate_id(true);
     }
     
