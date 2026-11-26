@@ -17,15 +17,24 @@ class Auth {
     
     public function subscribe($login, $pwd) {
         global $db;
-        $q = 'insert into users values(null, "'.addslashes($login).'", "'.md5($pwd).'", 0)';
-        $db->query($q);
+        $q = 'insert into users values(null, :login, :pwd, 0)';
+        $stmt = $db->prepare($q);
+        $stmt->execute([
+            'login' => $login,
+            'pwd' => md5($pwd)
+        ]);
     }
     
     public function tryLog($login, $pwd): bool {
         global $db;
-        $q = 'select * from users where login="'.$login.'" and pwd="'.md5($pwd).'"';
+        $q = 'select * from users where login = :login and pwd = :pwd';
         $found = null;
-        $ls = $db->query($q, PDO::FETCH_ASSOC);
+        $ls = $db->prepare($q);
+        $ls->execute([
+            'login' => $login,
+            'pwd' => md5($pwd)
+        ]);
+        $ls->setFetchMode(PDO::FETCH_ASSOC);
         if(!empty($ls)) {
             foreach($ls as $l) { $found = $l; }
         }
@@ -55,13 +64,20 @@ class Auth {
     
     public function getCodeFromLogin($login) {
         global $db;
-        $q = 'select id, pwd from users where login="'.$login.'"';
-        return $db->query($q)->fetch(PDO::FETCH_ASSOC);
+        $q = 'select id, pwd from users where login = :login';
+        $stmt = $db->prepare($q);
+        $stmt->execute(['login' => $login]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
     
     public function resetPwd($id, $code, $newPwd) {
         global $db;
-        $q = 'update users set pwd="'.md5($newPwd).'" where id="'.$id.'" and pwd="'.$code.'"';
-        $db->query($q);
+        $q = 'update users set pwd = :newPwd where id = :id and pwd = :code';
+        $stmt = $db->prepare($q);
+        $stmt->execute([
+            'newPwd' => md5($newPwd),
+            'id' => $id,
+            'code' => $code
+        ]);
     }
 }
