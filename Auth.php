@@ -47,11 +47,13 @@ class Auth {
     }
     
     public function log($id) {
+        session_regenerate_id(true);
         $_SESSION['userid'] = $id;
     }
-    
+
     public function logoff() {
         $_SESSION['userid'] = null;
+        session_regenerate_id(true);
     }
     
     public function isLogged() {
