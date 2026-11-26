@@ -10,6 +10,7 @@ class Auth {
     
     protected function __construct(){
         if (session_status() === PHP_SESSION_NONE) {
+            session_set_cookie_params(['httponly' => true, 'samesite' => 'Lax']);
             session_start();
         }
         // Suppression du cookie non sécurisé authbypass

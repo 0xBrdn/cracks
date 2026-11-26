@@ -1,4 +1,5 @@
 <?php
+    session_set_cookie_params(['httponly' => true, 'samesite' => 'Lax']);
     session_start();
     ob_start();
     require_once '../config.php';
@@ -33,7 +34,7 @@
         if(!empty($_SERVER['REQUEST_METHOD'])) {
             if('GET' === strtoupper($_SERVER['REQUEST_METHOD'])) {
                 if(!empty($_REQUEST['cid'])) {
-                    $v = countVotes(intval($_REQUEST['cid']), $_REQUEST['uid']);
+                    $v = countVotes(intval($_REQUEST['cid']), intval($_SESSION['userid'] ?? 0));
                     $result['val'] = $v['votes'];
                     $result['voted'] = $v['voted'];
                 } else {
