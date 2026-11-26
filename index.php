@@ -39,9 +39,11 @@
                 </li>
                 <?php } else { ?>
                 <li>
-                    <a href="./?inc=logoff">
-                        Déconnexion
-                    </a>
+                    <form method="post" action="./?inc=logoff">
+                        <input type="hidden" name="csrf"
+                               value="<?php echo htmlspecialchars(Auth::getInstance()->csrfToken(), ENT_QUOTES, 'UTF-8'); ?>">
+                        <button type="submit">Déconnexion</button>
+                    </form>
                 </li><?php } ?>
             </menu>
         </header>
@@ -50,7 +52,7 @@
                 $pages_autorisees = ['login', 'sub', 'logoff', 'add', 'search'];
 
                 if(!empty($_REQUEST['inc']) && in_array($_REQUEST['inc'], $pages_autorisees)) {
-                include './inc/'.$_REQUEST['inc'].'.php';
+                    include './inc/'.$_REQUEST['inc'].'.php';
                 } else {
                     include './inc/last.php';
                 }
