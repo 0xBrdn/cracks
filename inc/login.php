@@ -31,7 +31,7 @@
         if (Auth::getInstance()->tryLog($_REQUEST['login'], $_REQUEST['pwd'])) {
             // Connexion réussie : on remet le compteur à zéro
             $_SESSION['login_attempts'] = 0;
-            header('Location: index.php?sid=' . Auth::getInstance()->getSid());
+            header('Location: index.php', true, 303);
             exit;
         } else {
             // Échec : on incrémente le compteur d'erreurs
