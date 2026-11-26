@@ -40,10 +40,25 @@
                     $result['errors'][] = 'Not found';
                 }
             } else if('POST' === strtoupper($_SERVER['REQUEST_METHOD'])) {
-                $rawData = file_get_contents('php://input');
-                $decoded = json_decode($rawData);
-                doVote($decoded->cid, $_SESSION['userid'], $decoded->val);
-                $result['ok'] = 'ok';
+                $decoded = json_decode(file_get_contents('php://input'));
+                $cid = intval($decoded->cid ?? 0);
+                $val = intval($decoded->val ?? 0);
+                $uid = intval($_SESSION['userid'] ?? 0);
+                
+                if($uid <= 0) {
+                    $result['errors'][] = 'Connexion requise';
+                } else if($val !== 1 && $val !== -1) {
+                    $result['errors'][] = 'Vote invalide';
+                } else {
+                    $s = $db->prepare('select count(*) from votes where crack = ? and voter = ?');
+                    $s->execute([$cid, $uid]);
+                    if($s->fetchColumn() > 0) {
+                        $result['errors'][] = 'Déjà voté';
+                    } else {
+                        doVote($cid, $uid, $val);
+                        $result['ok'] = 'ok';
+                    }
+                }
             } else {
                 $result['errors'][] = 'Invalid method';
             }

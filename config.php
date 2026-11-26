@@ -41,6 +41,6 @@ function displayCrack($crack) {
     }
     echo '</div>';
     if($voteable) {
-        echo '<script type="text/javascript">loadVoteBar('.intval($crack['id']).', '.$_SESSION['userid'].');</script>';
+        echo '<script type="text/javascript">loadVoteBar('.intval($crack['id']).', '.intval($_SESSION['userid']).');</script>';
     }
 }

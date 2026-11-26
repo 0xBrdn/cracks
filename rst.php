@@ -1,9 +1,8 @@
 <?php
-$systemMdp = 'pwd1234';
 
 require_once 'config.php';
 
-if($systemMdp != $_REQUEST['mdp']) {
+if(!Auth::getInstance()->isLogged() || !Auth::getInstance()->isAdmin()) {
     echo 'Accès interdit !';
     exit;
 }
@@ -20,7 +19,6 @@ if($systemMdp != $_REQUEST['mdp']) {
         <form method="post">
             <p>
                 <input type="text" name="login" placeholder="login" />
-                <input type="hidden" name="mdp" value="<?php echo $systemMdp; ?>" />
                 <input type="submit" name="valid" value="Obtenir le lien" />
             </p>
         </form>

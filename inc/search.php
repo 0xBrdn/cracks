@@ -138,7 +138,7 @@
         <p>
             <label>
                 Par contenu :
-                <input name="content" type="search" value="<?php echo htmlspecialchars($content, ENT_QUOTES, 'UTF-8'); ; ?>" />
+                <input name="content" type="search" value="<?php echo htmlspecialchars($content, ENT_QUOTES, 'UTF-8'); ?>" />
             </label>
         </p>
         <input type="submit" value="Rechercher !" />

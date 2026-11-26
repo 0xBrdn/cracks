@@ -49,6 +49,14 @@ class Auth {
         return !empty($_SESSION['userid']);
     }
     
+    public function isAdmin(): bool {
+        global $db;
+        if(!$this->isLogged()) { return false; }
+        $s = $db->prepare('select isadmin from users where id = :id');
+        $s->execute(['id' => $_SESSION['userid']]);
+        return (bool) $s->fetchColumn();
+    }
+    
     public function getSid() {
         return session_id();
     }
