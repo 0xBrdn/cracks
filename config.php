@@ -27,7 +27,7 @@ if(!$databaseExists) {
 
 function displayCrack($crack) {
     $voteable = !empty($_SESSION['userid']);
-    echo '<div class="crack voteable" data-cid="'.$crack['id'].'">';
+    echo '<div class="crack voteable" data-cid="'.intval($crack['id']).'">';
     if($voteable) {
         echo '<div class="votebar">'
                 . '<span class="dovote" data-val="1">👍</span>'
@@ -37,10 +37,10 @@ function displayCrack($crack) {
     }
     echo '<p>'.Markdown::_($crack['content']).'</p>';
     if(!empty($crack['login'])) {
-        echo '<footer>Envoyé par '.$crack['login'].' le '.date('Y-m-d H:i', intval($crack['datesend'])).'</footer>';
+        echo '<footer>Envoyé par '.htmlspecialchars($crack['login'], ENT_QUOTES, 'UTF-8').' le '.date('Y-m-d H:i', intval($crack['datesend'])).'</footer>';
     }
     echo '</div>';
     if($voteable) {
-        echo '<script type="text/javascript">loadVoteBar('.$crack['id'].', '.$_SESSION['userid'].');</script>';
+        echo '<script type="text/javascript">loadVoteBar('.intval($crack['id']).', '.$_SESSION['userid'].');</script>';
     }
 }
